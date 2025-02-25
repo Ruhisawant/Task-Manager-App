@@ -47,6 +47,12 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void deleteTask(int index) {
+    setState(() {
+      tasks.removeAt(index);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   SizedBox(
-                    width: 300,
+                    width: 400,
                     child: TextField(
                       controller: taskController,
                       decoration: const InputDecoration(
@@ -81,7 +87,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
               ),
             ),
-            
             const SizedBox(height: 20),
             SizedBox(
               width: 400,
@@ -96,11 +101,17 @@ class _MyHomePageState extends State<MyHomePage> {
                   : ListView.builder(
                       itemCount: tasks.length,
                       itemBuilder: (context, index) {
-                        return CheckboxListTile(
+                        return ListTile(
+                          leading: Checkbox(
+                            value: tasks[index]['isChecked'],
+                            onChanged: (bool? newValue) =>
+                                toggleTask(index, newValue),
+                          ),
                           title: Text(tasks[index]['title']),
-                          value: tasks[index]['isChecked'],
-                          onChanged: (bool? newValue) =>
-                              toggleTask(index, newValue),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.delete, color: Colors.red),
+                            onPressed: () => deleteTask(index),
+                          ),
                         );
                       },
                     ),
