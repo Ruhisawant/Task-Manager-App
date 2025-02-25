@@ -15,20 +15,20 @@ class TaskManagerApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Task Manager App'),
+      home: const TaskListScreen(title: 'Task Manager App'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class TaskListScreen extends StatefulWidget {
+  const TaskListScreen({super.key, required this.title});
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<TaskListScreen> createState() => _TaskListScreenState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _TaskListScreenState extends State<TaskListScreen> {
   final List<Map<String, dynamic>> tasks = [];
   final TextEditingController taskController = TextEditingController();
 
@@ -104,10 +104,16 @@ class _MyHomePageState extends State<MyHomePage> {
                         return ListTile(
                           leading: Checkbox(
                             value: tasks[index]['isChecked'],
-                            onChanged: (bool? newValue) =>
-                                toggleTask(index, newValue),
+                            onChanged: (bool? newValue) => toggleTask(index, newValue),
                           ),
-                          title: Text(tasks[index]['title']),
+                          title: Text(
+                            tasks[index]['title'],
+                            style: TextStyle(
+                              decoration: tasks[index]['isChecked']
+                                  ? TextDecoration.lineThrough
+                                  : TextDecoration.none,
+                            ),
+                          ),
                           trailing: IconButton(
                             icon: const Icon(Icons.delete, color: Colors.red),
                             onPressed: () => deleteTask(index),
