@@ -31,13 +31,20 @@ class TaskListScreen extends StatefulWidget {
 class _TaskListScreenState extends State<TaskListScreen> {
   final List<Map<String, dynamic>> tasks = [];
   final TextEditingController taskController = TextEditingController();
+  String selectedPriority = 'Medium'; // Default priority
 
   void addTask() {
-    if (taskController.text.isNotEmpty) {
+    if (taskController.text.trim().isNotEmpty) {
       setState(() {
-        tasks.add({'title': taskController.text, 'isChecked': false});
+        tasks.add({
+          'title': taskController.text.trim(),
+          'isChecked': false,
+          'priority': selectedPriority,
+        });
+        taskController.clear();
+        selectedPriority = 'Medium'; // Reset to default
+        sortTasks();
       });
-      taskController.clear();
     }
   }
 
@@ -50,6 +57,15 @@ class _TaskListScreenState extends State<TaskListScreen> {
   void deleteTask(int index) {
     setState(() {
       tasks.removeAt(index);
+    });
+  }
+
+  void sortTasks() {
+    setState(() {
+      tasks.sort((a, b) {
+        const priorityOrder = {'High': 3, 'Medium': 2, 'Low': 1};
+        return priorityOrder[b['priority']]!.compareTo(priorityOrder[a['priority']]!);
+      });
     });
   }
 
@@ -70,7 +86,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   SizedBox(
-                    width: 400,
+                    width: 250,
                     child: TextField(
                       controller: taskController,
                       decoration: const InputDecoration(
@@ -78,6 +94,21 @@ class _TaskListScreenState extends State<TaskListScreen> {
                         labelText: 'Enter task',
                       ),
                     ),
+                  ),
+                  const SizedBox(width: 10),
+                  DropdownButton<String>(
+                    value: selectedPriority,
+                    items: ['Low', 'Medium', 'High'].map((priority) {
+                      return DropdownMenuItem<String>(
+                        value: priority,
+                        child: Text(priority),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        selectedPriority = value!;
+                      });
+                    },
                   ),
                   const SizedBox(width: 10),
                   ElevatedButton(
@@ -107,7 +138,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
                             onChanged: (bool? newValue) => toggleTask(index, newValue),
                           ),
                           title: Text(
-                            tasks[index]['title'],
+                            "${tasks[index]['title']} (${tasks[index]['priority']})",
                             style: TextStyle(
                               decoration: tasks[index]['isChecked']
                                   ? TextDecoration.lineThrough
