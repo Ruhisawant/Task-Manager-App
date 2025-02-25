@@ -29,8 +29,23 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  bool isChecked1 = false;
-  bool isChecked2 = false;
+  final List<Map<String, dynamic>> tasks = [];
+  final TextEditingController taskController = TextEditingController();
+
+  void addTask() {
+    if (taskController.text.isNotEmpty) {
+      setState(() {
+        tasks.add({'title': taskController.text, 'isChecked': false});
+      });
+      taskController.clear();
+    }
+  }
+
+  void toggleTask(int index, bool? newValue) {
+    setState(() {
+      tasks[index]['isChecked'] = newValue!;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,61 +57,53 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                const SizedBox(
-                  width: 250,
-                  child: TextField(
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Enter text',
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(
+                    width: 300,
+                    child: TextField(
+                      controller: taskController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Enter task',
+                      ),
                     ),
                   ),
-                ),
-
-                const SizedBox(width: 10),
-                ElevatedButton(
-                  onPressed: () {
-                    const Text('Button clicked');
-                  },
-                  child: const Text('Click me'),
-                ),
-              ],
-            ),
-            
-            const SizedBox(height: 20),
-            Container(
-              width: 400,
-              alignment: Alignment.centerLeft,
-              child: ListView(
-                shrinkWrap: true,
-                children: [
-                  CheckboxListTile(
-                    title: const Text('Task 1'),
-                    subtitle: const Text('Description of task 1'),
-                    value: isChecked1,
-                    onChanged: (bool? newValue) {
-                      setState(() {
-                        isChecked1 = newValue!;
-                      });
-                    },
-                    
-                  ),
-                  CheckboxListTile(
-                    title: const Text('Task 2'),
-                    subtitle: const Text('Description of task 2'),
-                    value: isChecked2,
-                    onChanged: (bool? newValue) {
-                      setState(() {
-                        isChecked2 = newValue!;
-                      });
-                    },
+                  const SizedBox(width: 10),
+                  ElevatedButton(
+                    onPressed: addTask,
+                    child: const Text('Add Task'),
                   ),
                 ],
               ),
+            ),
+            
+            const SizedBox(height: 20),
+            SizedBox(
+              width: 400,
+              height: 300,
+              child: tasks.isEmpty
+                  ? const Center(
+                      child: Text(
+                        "No tasks added yet.",
+                        style: TextStyle(fontSize: 16, color: Colors.grey),
+                      ),
+                    )
+                  : ListView.builder(
+                      itemCount: tasks.length,
+                      itemBuilder: (context, index) {
+                        return CheckboxListTile(
+                          title: Text(tasks[index]['title']),
+                          value: tasks[index]['isChecked'],
+                          onChanged: (bool? newValue) =>
+                              toggleTask(index, newValue),
+                        );
+                      },
+                    ),
             ),
           ],
         ),
