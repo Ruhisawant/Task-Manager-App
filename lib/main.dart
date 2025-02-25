@@ -29,6 +29,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  bool isChecked1 = false;
+  bool isChecked2 = false;
 
   @override
   Widget build(BuildContext context) {
@@ -71,14 +73,27 @@ class _MyHomePageState extends State<MyHomePage> {
               alignment: Alignment.centerLeft,
               child: ListView(
                 shrinkWrap: true,
-                children: const [
-                  ListTile(
-                    title: Text('Task 1'),
-                    subtitle: Text('Description of task 1'),
+                children: [
+                  CheckboxListTile(
+                    title: const Text('Task 1'),
+                    subtitle: const Text('Description of task 1'),
+                    value: isChecked1,
+                    onChanged: (bool? newValue) {
+                      setState(() {
+                        isChecked1 = newValue!;
+                      });
+                    },
+                    
                   ),
-                  ListTile(
-                    title: Text('Task 2'),
-                    subtitle: Text('Description of task 2'),
+                  CheckboxListTile(
+                    title: const Text('Task 2'),
+                    subtitle: const Text('Description of task 2'),
+                    value: isChecked2,
+                    onChanged: (bool? newValue) {
+                      setState(() {
+                        isChecked2 = newValue!;
+                      });
+                    },
                   ),
                 ],
               ),
