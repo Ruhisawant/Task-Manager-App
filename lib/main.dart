@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const TaskManagementApp());
+  runApp(const TaskManagerApp());
 }
 
-class TaskManagementApp extends StatelessWidget {
-  const TaskManagementApp({super.key});
+class TaskManagerApp extends StatelessWidget {
+  const TaskManagerApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Task Manager App',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Task Manager App'),
     );
   }
 }
@@ -29,13 +29,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,21 +40,51 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const SizedBox(
+                  width: 250,
+                  child: TextField(
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Enter text',
+                    ),
+                  ),
+                ),
+
+                const SizedBox(width: 10),
+                ElevatedButton(
+                  onPressed: () {
+                    const Text('Button clicked');
+                  },
+                  child: const Text('Click me'),
+                ),
+              ],
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+            
+            const SizedBox(height: 20),
+            Container(
+              width: 400,
+              alignment: Alignment.centerLeft,
+              child: ListView(
+                shrinkWrap: true,
+                children: const [
+                  ListTile(
+                    title: Text('Task 1'),
+                    subtitle: Text('Description of task 1'),
+                  ),
+                  ListTile(
+                    title: Text('Task 2'),
+                    subtitle: Text('Description of task 2'),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
       ),
     );
   }
