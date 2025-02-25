@@ -4,6 +4,7 @@ void main() {
   runApp(const TaskManagerApp());
 }
 
+// Main Application Widget
 class TaskManagerApp extends StatelessWidget {
   const TaskManagerApp({super.key});
 
@@ -20,6 +21,7 @@ class TaskManagerApp extends StatelessWidget {
   }
 }
 
+// Task List Screen Widget
 class TaskListScreen extends StatefulWidget {
   const TaskListScreen({super.key, required this.title});
   final String title;
@@ -31,8 +33,9 @@ class TaskListScreen extends StatefulWidget {
 class _TaskListScreenState extends State<TaskListScreen> {
   final List<Map<String, dynamic>> tasks = [];
   final TextEditingController taskController = TextEditingController();
-  String selectedPriority = 'Medium'; // Default priority
+  String selectedPriority = 'Medium';
 
+  // Function to add a new task
   void addTask() {
     if (taskController.text.trim().isNotEmpty) {
       setState(() {
@@ -42,24 +45,27 @@ class _TaskListScreenState extends State<TaskListScreen> {
           'priority': selectedPriority,
         });
         taskController.clear();
-        selectedPriority = 'Medium'; // Reset to default
+        selectedPriority = 'Medium';
         sortTasks();
       });
     }
   }
 
+  // Function to toggle task completion status
   void toggleTask(int index, bool? newValue) {
     setState(() {
       tasks[index]['isChecked'] = newValue!;
     });
   }
 
+  // Function to delete a task
   void deleteTask(int index) {
     setState(() {
       tasks.removeAt(index);
     });
   }
 
+  // Function to sort tasks by priority
   void sortTasks() {
     setState(() {
       tasks.sort((a, b) {
@@ -69,6 +75,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
     });
   }
 
+  // Function to get background color based on priority
   Color getPriorityColor(String priority) {
     switch (priority) {
       case 'High':
@@ -93,6 +100,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            // Input Section for Adding Tasks
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Row(
@@ -132,6 +140,8 @@ class _TaskListScreenState extends State<TaskListScreen> {
               ),
             ),
             const SizedBox(height: 20),
+            
+            // Task List Section
             SizedBox(
               width: 400,
               height: 300,
