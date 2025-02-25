@@ -12,7 +12,7 @@ class TaskManagerApp extends StatelessWidget {
     return MaterialApp(
       title: 'Task Manager App',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
       home: const TaskListScreen(title: 'Task Manager App'),
@@ -67,6 +67,19 @@ class _TaskListScreenState extends State<TaskListScreen> {
         return priorityOrder[b['priority']]!.compareTo(priorityOrder[a['priority']]!);
       });
     });
+  }
+
+  Color getPriorityColor(String priority) {
+    switch (priority) {
+      case 'High':
+        return Colors.red.shade300;
+      case 'Medium':
+        return Colors.yellow.shade300;
+      case 'Low':
+        return Colors.green.shade300;
+      default:
+        return Colors.grey.shade200;
+    }
   }
 
   @override
@@ -132,22 +145,29 @@ class _TaskListScreenState extends State<TaskListScreen> {
                   : ListView.builder(
                       itemCount: tasks.length,
                       itemBuilder: (context, index) {
-                        return ListTile(
-                          leading: Checkbox(
-                            value: tasks[index]['isChecked'],
-                            onChanged: (bool? newValue) => toggleTask(index, newValue),
+                        return Card(
+                          color: getPriorityColor(tasks[index]['priority']),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
                           ),
-                          title: Text(
-                            "${tasks[index]['title']} (${tasks[index]['priority']})",
-                            style: TextStyle(
-                              decoration: tasks[index]['isChecked']
-                                  ? TextDecoration.lineThrough
-                                  : TextDecoration.none,
+                          margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                          child: ListTile(
+                            leading: Checkbox(
+                              value: tasks[index]['isChecked'],
+                              onChanged: (bool? newValue) => toggleTask(index, newValue),
                             ),
-                          ),
-                          trailing: IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.red),
-                            onPressed: () => deleteTask(index),
+                            title: Text(
+                              "${tasks[index]['title']} (${tasks[index]['priority']})",
+                              style: TextStyle(
+                                decoration: tasks[index]['isChecked']
+                                    ? TextDecoration.lineThrough
+                                    : TextDecoration.none,
+                              ),
+                            ),
+                            trailing: IconButton(
+                              icon: const Icon(Icons.delete, color: Colors.red),
+                              onPressed: () => deleteTask(index),
+                            ),
                           ),
                         );
                       },
